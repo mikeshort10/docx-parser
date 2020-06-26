@@ -4,17 +4,20 @@
   "description": "Docx parser using mammoth.js for test for the PJK Art Series",
   "main": "index.js",
   "scripts": {
-    "parse": "node index.js",
+    "parse": "ts-node index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/uuid": "^8.0.0",
     "aws-sdk": "^2.703.0",
+    "axios": "^0.19.2",
     "dotenv": "^8.2.0",
     "fp-ts": "^2.6.6",
-    "mammoth": "^1.4.9"
+    "mammoth": "^1.4.9",
+    "uuid": "^8.2.0"
   },
   "devDependencies": {
     "@types/aws-sdk": "^2.7.0",

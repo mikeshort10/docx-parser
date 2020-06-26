@@ -1,14 +1,17 @@
-const mammoth = require("mammoth");
-const fs = require("fs");
-const A = require("fp-ts/lib/Array");
-const { pipe, flow } = require("fp-ts/lib/function");
-const { AWS } = require("./AWS.config");
+import mammoth from "mammoth";
+import * as fs from "fs";
+import * as A from "fp-ts/lib/Array";
+import { pipe, flow } from "fp-ts/lib/function";
+import { AWS } from "./AWS.config";
+import { uploadToDb } from "./updateToDb";
 
 const s3 = new AWS.S3();
 
-const addAltTextToImages = (title) => (nodes) => {
+type Node = any;
+
+const addAltTextToImages = (title: string) => (nodes: Node[]) => {
   return A.array
-    .mapWithIndex(nodes, (i, node) => {
+    .mapWithIndex(nodes, (i, node: Node) => {
       if (node.type === "image") {
         const altText = nodes[i + 1].value;
         const fileExtension = node.contentType.split("/")[1];
@@ -26,10 +29,10 @@ const addAltTextToImages = (title) => (nodes) => {
     .filter(Boolean);
 };
 
-const writeImages = (nodes) => {
+const writeImages = (nodes: Node[]) => {
   return A.array.map(nodes, (node) => {
     if (node.type === "image") {
-      node.read().then((data) => {
+      node.read().then((data: string | Buffer) => {
         fs.writeFileSync(`./output/${node.src}`, data);
         s3.putObject(
           {
@@ -46,7 +49,7 @@ const writeImages = (nodes) => {
   });
 };
 
-const getChildren = ({ children }) => children;
+const getChildren = ({ children }: { children: Node[] }) => children;
 
 const flattenChildren = flow(
   getChildren,
@@ -54,7 +57,7 @@ const flattenChildren = flow(
   A.flatten,
   A.map(getChildren),
   A.map(
-    A.reduce([], (acc, node, i) => {
+    A.reduceWithIndex([] as Node[], (i, acc, node: Node) => {
       const lastInRun = acc[i - 1];
       if (lastInRun && lastInRun.type === "text" && node.type === "text") {
         lastInRun.value += node.value;
@@ -66,7 +69,7 @@ const flattenChildren = flow(
   A.flatten
 );
 
-function jsonFromDocx(title) {
+function jsonFromDocx(title: string | undefined) {
   if (!title) {
     console.log(`
     Pass in the title of the docx file you want to parse.
@@ -76,17 +79,16 @@ function jsonFromDocx(title) {
     return;
   }
 
-  const transformDocument = (document) => {
+  type Document = any;
+
+  const transformDocument = (document: Document) => {
     pipe(
       document,
       flattenChildren,
       addAltTextToImages(title),
       writeImages,
-      (arr) =>
-        fs.writeFileSync(
-          `output/${title}.js`,
-          `export default ${JSON.stringify({ title, html: arr })}`
-        )
+      (arr) => ({ title, html: arr }),
+      uploadToDb
     );
     return document;
   };
@@ -106,7 +108,7 @@ function jsonFromDocx(title) {
       },
       { transformDocument }
     )
-    .catch((e) => console.log(e.message));
+    .catch(({ message }: Error) => console.log(message));
 }
 
 jsonFromDocx(process.argv.slice(2).join(" "));

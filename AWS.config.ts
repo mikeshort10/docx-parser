@@ -1,4 +1,4 @@
-const AWS = require("aws-sdk");
+import AWS from "aws-sdk";
 require("dotenv").config();
 
 AWS.config.update({
@@ -7,4 +7,4 @@ AWS.config.update({
   region: "us-east-1",
 });
 
-module.exports = { AWS };
+export { AWS };
