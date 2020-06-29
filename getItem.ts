@@ -15,7 +15,7 @@ const getTitles = () => {
         ":installmentId": { S: "Juan de Pareja" },
       },
     },
-    (err, data) => console.log(err || data)
+    (err) => err && console.log(err)
   );
 };
 
