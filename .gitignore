@@ -1,7 +1,4 @@
 node_modules
 .env
-<<<<<<< HEAD
 .DS_Store
-=======
 yarn-error.log
->>>>>>> 3f8c14e1f2ff2a6f2156294e3c6f371641612efc
