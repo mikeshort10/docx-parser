@@ -138,13 +138,6 @@ function jsonFromDocx(
       {
         path,
         ignoreEmptyParagraphs: true,
-        // convertImage: mammoth.images.imgElement(function (image) {
-        //   return image.read("base64").then(function (imageBuffer) {
-        //     return {
-        //       src: "data:" + image.contentType + ";base64," + imageBuffer,
-        //     };
-        //   });
-        // }),
       },
       { transformDocument }
     )

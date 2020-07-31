@@ -65,8 +65,14 @@ export const uploadToDb = (
 
   for (let i = 0; i < updates.length; i += 25) {
     dbClient.batchWrite(
-      { RequestItems: { "pjk-art-series": updates.slice(i, i + 25) } },
-      (err: Error, data: any) => err && console.log(err)
+      {
+        RequestItems: {
+          "pjk-art-series": updates.slice(i, i + 25),
+        },
+      },
+      (err: Error, data: any): void => err && console.log(err)
     );
   }
+
+  console.log("🔗: ", "https://pjk.netlify.app");
 };
