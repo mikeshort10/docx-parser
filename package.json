@@ -13,7 +13,7 @@
   "dependencies": {
     "@types/uuid": "^8.0.0",
     "aws-sdk": "^2.703.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "dotenv": "^8.2.0",
     "fp-ts": "^2.6.6",
     "mammoth": "^1.4.9",
