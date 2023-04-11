@@ -12,7 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@types/uuid": "^8.0.0",
-    "aws-sdk": "^2.703.0",
+    "aws-sdk": "^2.1354.0",
     "axios": "^0.21.2",
     "dotenv": "^8.2.0",
     "fp-ts": "^2.6.6",
